@@ -1,0 +1,59 @@
+<html>
+	<head>
+	<script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.3.0/stitch.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+	<title>Get Up, StitchUp!</title>
+	</head>
+
+	<body>
+		<h1>My standups: <span id="headerusername"></span></h1>
+
+		<ul id="standuplist"></ul>
+
+		<a href="createStandup.html">(+) Create new standup</a>
+	</body>
+
+<script>
+const client = stitch.Stitch.initializeDefaultAppClient('stitchuplocal-hxiso');
+
+const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('stitchup');
+
+console.log(client.auth.hasRedirectResult());
+console.log(client.auth.isLoggedIn);
+
+function populatePage() {
+
+	//$("#headerusername").text(client.auth.user.profile.email);
+	username = client.auth.user.profile.email.split('@')[0];
+	$("#headerusername").text(username);
+
+	db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
+		console.log("Found docs", docs)
+		var standuplist = $("#standuplist");
+		for (var doc in docs) {
+			standuplist.append($("li").text(doc.id));
+		}
+	}).catch(err => {
+		console.error(err)
+	});
+
+}
+
+if (client.auth.hasRedirectResult()) {
+    client.auth.handleRedirectResult().then(user => {
+        console.log("redirect result", user);
+		populatePage();
+    });
+} else {
+
+	if (!client.auth.isLoggedIn) {
+		client.auth.loginWithRedirect(new stitch.GoogleRedirectCredential());
+	} else {
+        console.log("logged in", client.auth);
+		populatePage();
+	}
+}
+
+</script>
+
+</html>
