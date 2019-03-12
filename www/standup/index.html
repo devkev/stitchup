@@ -10,8 +10,6 @@
 		<h1 id="standupname">Standup: Australia TSE Standup</h1>
 
 	     <div class="main_div">
-		Next scheduled time: <span id="scheduledtime">11:00am, Thursday 14 February 2019</span>
-                <br>
                 Original time: <span id="origtime">Loading...</span>
                 <br>
 		Next scheduled time: <span id="scheduledtime">Loading...</span>
@@ -65,19 +63,17 @@ if (hasRedirectResult) {
 }
 
 function populatePage() {
-    $("#standupname").text(standup_id);
-
     db.collection('standups').find({_id: { "$oid" : standup_id}}).asArray().then( docs => {
 	console.log("Found docs", docs);
 
-        sDoc = docs[0];
-        sOrigDate = new Date(sDoc.standup_org_time);
-        sUpdatedDate = new Date(sDoc.standup_updated_time);
-        now = new Date();
+        const sDoc = docs[0];
+        const sOrigDate = new Date(sDoc.standup_org_time);
+        const sUpdatedDate = new Date(sDoc.standup_updated_time);
+        const now = new Date();
 
         if (now.getTime() < sUpdatedDate.getTime()) {
             // Formatting the countdown string.
-            utcDate = new Date(now - sUpdatedDate);
+            const utcDate = new Date(now - sUpdatedDate);
             countdownString =
                 ("0" + utcDate.getUTCHours()).slice(-2) + ":" +
                 ("0" + utcDate.getUTCMinutes()).slice(-2) + ":" +
@@ -86,7 +82,7 @@ function populatePage() {
             countdownString = "Standup already commenced.";
         }
 
-        $('#description').text(sDoc.standup_desc);
+        $("#standupname").text(sDoc.standup_desc);
         $('#origtime').text(sOrigDate.toTimeString());
         $('#scheduledtime').text(sUpdatedDate.toTimeString());
         $('#maxdelay').text(sDoc.standup_delay);
