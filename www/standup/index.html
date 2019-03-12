@@ -67,7 +67,7 @@ if (hasRedirectResult) {
 function populatePage() {
     $("#standupname").text(standup_id);
 
-    db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
+    db.collection('standups').find({_id: { "$oid" : standup_id}}).asArray().then( docs => {
 	console.log("Found docs", docs);
 
         sDoc = docs[0];
