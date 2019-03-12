@@ -46,7 +46,7 @@ function populateStandupList(elem, query) {
 			$(elem).append('<li>none</li>');
 		} else {
 			// TESTING ONLY:
-			docs.push( { _id: "fakestandup", standup_desc: "Fake standup for testing" } );
+			//docs.push( { _id: "fakestandup", standup_desc: "Fake standup for testing" } );
 			$(elem).append(docs.map(doc => `<li><a href="standup/?${doc._id}">${doc.standup_desc}</a></li>`));
 		}
 	}).catch(err => {
@@ -60,7 +60,9 @@ function populatePage() {
 	username = client.auth.user.profile.email.split('@')[0];
 	$("#headerusername").text(username);
 
-	populateStandupList($('#mystandups'), {participant_id: client.auth.user.id});
+	//console.log( client.auth);
+	//populateStandupList($('#mystandups'), {participant_id: client.auth.user.id});
+	populateStandupList($('#mystandups'), {participant_id: username});
 	populateStandupList($('#allstandups'), {});
 }
 
