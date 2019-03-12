@@ -70,6 +70,11 @@ button {
 h1 {
   text-align: center;
   color: #424950;
+  font-size: 300%;
+}
+
+h2 {
+  color: #424950;
 }
 
 body {
