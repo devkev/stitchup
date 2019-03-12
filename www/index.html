@@ -7,8 +7,10 @@
 
 	<body>
 		<h1>My standups: <span id="headerusername"></span></h1>
+		<ul id="mystandups"></ul>
 
-		<ul id="standuplist"></ul>
+		<h1>All standups:</h1>
+		<ul id="allstandups"></ul>
 
 		<a href="createStandup.html">(+) Create new standup</a>
 	</body>
@@ -31,20 +33,32 @@ if (client.auth.hasRedirectResult()) {
 	}
 }
 
+function populateStandupList(elem, query) {
+	$(elem).empty();
+	$(elem).append('<li>Loading...</li');
+	db.collection('standups').find(query).asArray().then( docs => {
+		console.log("Found docs", docs);
+		$(elem).empty();
+		if (docs.length === 0) {
+			$(elem).append('<li>none</li>');
+		} else {
+			// TESTING ONLY:
+			docs.push( { _id: "fakestandup", standup_desc: "Fake standup for testing" } );
+			$(elem).append(docs.map(doc => `<li><a href="standup/?${doc._id}">${doc.standup_desc}</a></li>`));
+		}
+	}).catch(err => {
+		console.error(err)
+	});
+}
+
 function populatePage() {
 
 	//$("#headerusername").text(client.auth.user.profile.email);
 	username = client.auth.user.profile.email.split('@')[0];
 	$("#headerusername").text(username);
 
-	db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
-	    console.log("Found docs", docs);
-            const standuplist = docs.map(doc => `<li>${doc.standup_id}</li>`);
-            $('#standuplist').append(standuplist);
-	}).catch(err => {
-		console.error(err)
-	});
-
+	populateStandupList($('#mystandups'), {participant_id: client.auth.user.id});
+	populateStandupList($('#allstandups'), {});
 }
 
 </script>

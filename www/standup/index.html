@@ -2,45 +2,35 @@
 	<head>
 	<script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.3.0/stitch.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+        <link href="../stitchUp.css" rel="stylesheet" type="text/css"/>
 	<title>Get Up, StitchUp!</title>
 	</head>
 
-	<body>
+	<body background="../test.png">
 		<h1 id="standupname">Standup: Australia TSE Standup</h1>
 
-		<p>
-                  Description: <span id="description">Loading...</span>
-                </p>
+	     <div class="main_div">
+		Next scheduled time: <span id="scheduledtime">11:00am, Thursday 14 February 2019</span>
+                <br>
+                Original time: <span id="origtime">Loading...</span>
+                <br>
+		Next scheduled time: <span id="scheduledtime">Loading...</span>
+                <br>
+                Maximum delay: <span id="maxdelay">Loading...</span> minutes
+                <br>
 
-                <p>
-                  Original time: <span id="origtime">Loading...</span>
-                </p>
+		<span class="participants">
+		</span>
 
-                <p>
-		  Next scheduled time: <span id="scheduledtime">Loading...</span>
-                </p>
+		<span class="countdown" id="countdown">
+		  HH:MM:SS
+		</span>
 
-                <p>
-                  Maximum delay: <span id="maxdelay">Loading...</span> minutes
-                </p>
-
-		<div style="display: flex; width: 100%;">
-
-		<div class="participants" style="width: 33%">
-
-		</div>
-
-		<div class="countdown" style="width: 33%">
-		  <span id="countdown">HH:MM:SS</span>
-		</div>
-
-		<p>
+		<br>
 		Actions:
-		<ul>
-			<li><a href="">Delay 5 mins</a>
-			<li><a href="">Can't make it</a>
-			<li><a href="">...</a>
-		</ul>
+		<button class="action_button">Delay 5 mins</button>
+		<button class="action_button">Can't make it</button>
+	    </div>
 
 	</body>
 
