@@ -39,16 +39,9 @@ function populatePage() {
 
 	db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
 		console.log("Found docs", docs);
-		var standuplist = $("#standuplist");
 		// TESTING ONLY:
 		docs.push( { id: "teststandup", standup_desc: "Test standup" } );
-		for (var doc of docs) {
-			standuplist.append(
-				$("<li>").append(
-					$("<a>").attr("href", "standup/?" + doc.id).text(doc.standup_desc)
-				)
-			);
-		}
+		$('#standuplist').append(docs.map(doc => `<li><a href="standup/?${doc.id}">${doc.standup_desc}</a></li>`));
 	}).catch(err => {
 		console.error(err)
 	});
