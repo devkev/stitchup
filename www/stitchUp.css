@@ -67,7 +67,7 @@ button {
   -webkit-filter: blur(8px);
 }
 
-#standupname {
+h1 {
   text-align: center;
   color: #424950;
 }
