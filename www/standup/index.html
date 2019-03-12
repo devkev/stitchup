@@ -77,13 +77,29 @@ if (hasRedirectResult) {
 	}
 }
 
+function updateCountdown() {
+	const now = new Date();
+	if (now.getTime() < sUpdatedDate.getTime()) {
+		// Formatting the countdown string.
+		const utcDate = new Date(sUpdatedDate - now);
+		countdownString =
+			("0" + utcDate.getUTCHours()).slice(-2) + ":" +
+			("0" + utcDate.getUTCMinutes()).slice(-2) + ":" +
+			("0" + utcDate.getUTCSeconds()).slice(-2);
+	} else {
+		//countdownString = "Standup already commenced.";
+		countdownString = "00:00:00";
+	}
+	$('#countdown').text(countdownString);
+}
+
 function populatePage() {
     db.collection('standups').find({_id: { "$oid" : standup_id}}).asArray().then( docs => {
 	console.log("Found docs", docs);
 
         const sDoc = docs[0];
         const sOrigDate = new Date(sDoc.standup_org_time);
-        const sUpdatedDate = new Date(sDoc.standup_updated_time);
+        sUpdatedDate = new Date(sDoc.standup_updated_time);
         const now = new Date();
 
         if (now.getTime() < sUpdatedDate.getTime()) {
@@ -102,6 +118,7 @@ function populatePage() {
         $('#scheduledtime').text(sUpdatedDate.toTimeString());
         $('#maxdelay').text(sDoc.standup_delay);
         $('#countdown').text(countdownString);
+		setInterval(updateCountdown, 1000);
     }).catch(err => {
 	console.error(err)
     });
