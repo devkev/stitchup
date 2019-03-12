@@ -9,6 +9,27 @@
 	<body background="../test.png">
 		<h1 id="standupname">Standup: Loading...</h1>
 
+<table width=100%>
+<tr>
+<td rowspan=2 width=33% valign=top>
+		<span class="participants">
+Participants:
+<ul>
+<li>Participant 1
+<li>Participant 2
+<li>Participant 3
+<li>...
+</ul>
+		</span>
+</td>
+<td valign=top align=center>
+		<span class="countdown" id="countdown" style="font-size: 500%;">
+		  HH:MM:SS
+		</span>
+</td>
+</tr>
+<tr>
+<td valign=top height=20%>
 	     <div class="main_div">
                 Original time: <span id="origtime">Loading...</span>
                 <br>
@@ -17,18 +38,12 @@
                 Maximum delay: <span id="maxdelay">Loading...</span> minutes
                 <br>
 
-		<span class="participants">
-		</span>
-
-		<span class="countdown" id="countdown">
-		  HH:MM:SS
-		</span>
-
 		<br>
 		Actions:
 		<button class="action_button">Delay 5 mins</button>
 		<button class="action_button">Can't make it</button>
 	    </div>
+</td>
 
 	</body>
 
