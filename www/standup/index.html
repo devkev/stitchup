@@ -9,7 +9,20 @@
 		<h1 id="standupname">Standup: Australia TSE Standup</h1>
 
 		<p>
-		Next scheduled time: <span id="scheduledtime">11:00am, Thursday 14 February 2019</span>
+                  Description: <span id="description">Loading...</span>
+                </p>
+
+                <p>
+                  Original time: <span id="origtime">Loading...</span>
+                </p>
+
+                <p>
+		  Next scheduled time: <span id="scheduledtime">Loading...</span>
+                </p>
+
+                <p>
+                  Maximum delay: <span id="maxdelay">Loading...</span> minutes
+                </p>
 
 		<div style="display: flex; width: 100%;">
 
@@ -18,7 +31,7 @@
 		</div>
 
 		<div class="countdown" style="width: 33%">
-		HH:MM:SS
+		  <span id="countdown">HH:MM:SS</span>
 		</div>
 
 		<p>
@@ -62,19 +75,35 @@ if (hasRedirectResult) {
 }
 
 function populatePage() {
+    $("#standupname").text(standup_id);
 
-	$("#standupname").text(standup_id);
+    db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
+	console.log("Found docs", docs);
 
-	//db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
-	//	console.log("Found docs", docs)
-	//	var standuplist = $("#standuplist");
-	//	for (var doc in docs) {
-	//		standuplist.append($("li").text(doc.id));
-	//	}
-	//}).catch(err => {
-	//	console.error(err)
-	//});
+        sDoc = docs[0];
+        sOrigDate = new Date(sDoc.standup_org_time);
+        sUpdatedDate = new Date(sDoc.standup_updated_time);
+        now = new Date();
 
+        if (now.getTime() < sUpdatedDate.getTime()) {
+            // Formatting the countdown string.
+            utcDate = new Date(now - sUpdatedDate);
+            countdownString =
+                ("0" + utcDate.getUTCHours()).slice(-2) + ":" +
+                ("0" + utcDate.getUTCMinutes()).slice(-2) + ":" +
+                ("0" + utcDate.getUTCSeconds()).slice(-2);
+        } else {
+            countdownString = "Standup already commenced.";
+        }
+
+        $('#description').text(sDoc.standup_desc);
+        $('#origtime').text(sOrigDate.toTimeString());
+        $('#scheduledtime').text(sUpdatedDate.toTimeString());
+        $('#maxdelay').text(sDoc.standup_delay);
+        $('#countdown').text(countdownString);
+    }).catch(err => {
+	console.error(err)
+    });
 }
 
 </script>
