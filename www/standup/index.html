@@ -33,13 +33,37 @@
 
 <script>
 const client = stitch.Stitch.initializeDefaultAppClient('stitchuplocal-hxiso');
-
 const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('stitchup');
 
-console.log(client.auth.hasRedirectResult());
-console.log(client.auth.isLoggedIn);
+query = window.location.search;
+standup_id = query.substring(1);
+if (standup_id === "") {
+	// No standup id provided, redirect to the main list
+	window.location = "/";
+}
+console.log("standup_id", standup_id);
+
+// This unfortunately unsets window.location.search
+hasRedirectResult = client.auth.hasRedirectResult();
+window.history.replaceState({}, document.title, window.location + query);
+
+if (hasRedirectResult) {
+    client.auth.handleRedirectResult().then(user => {
+        console.log("redirect result", user);
+		populatePage();
+    });
+} else {
+	if (!client.auth.isLoggedIn) {
+		client.auth.loginWithRedirect(new stitch.GoogleRedirectCredential());
+	} else {
+        console.log("logged in", client.auth);
+		populatePage();
+	}
+}
 
 function populatePage() {
+
+	$("#standupname").text(standup_id);
 
 	//db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
 	//	console.log("Found docs", docs)
@@ -51,21 +75,6 @@ function populatePage() {
 	//	console.error(err)
 	//});
 
-}
-
-if (client.auth.hasRedirectResult()) {
-    client.auth.handleRedirectResult().then(user => {
-        console.log("redirect result", user);
-		populatePage();
-    });
-} else {
-
-	if (!client.auth.isLoggedIn) {
-		client.auth.loginWithRedirect(new stitch.GoogleRedirectCredential());
-	} else {
-        console.log("logged in", client.auth);
-		populatePage();
-	}
 }
 
 </script>

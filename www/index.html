@@ -15,11 +15,21 @@
 
 <script>
 const client = stitch.Stitch.initializeDefaultAppClient('stitchuplocal-hxiso');
-
 const db = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('stitchup');
 
-console.log(client.auth.hasRedirectResult());
-console.log(client.auth.isLoggedIn);
+if (client.auth.hasRedirectResult()) {
+    client.auth.handleRedirectResult().then(user => {
+        console.log("redirect result", user);
+		populatePage();
+    });
+} else {
+	if (!client.auth.isLoggedIn) {
+		client.auth.loginWithRedirect(new stitch.GoogleRedirectCredential());
+	} else {
+        console.log("logged in", client.auth);
+		populatePage();
+	}
+}
 
 function populatePage() {
 
@@ -37,21 +47,6 @@ function populatePage() {
 		console.error(err)
 	});
 
-}
-
-if (client.auth.hasRedirectResult()) {
-    client.auth.handleRedirectResult().then(user => {
-        console.log("redirect result", user);
-		populatePage();
-    });
-} else {
-
-	if (!client.auth.isLoggedIn) {
-		client.auth.loginWithRedirect(new stitch.GoogleRedirectCredential());
-	} else {
-        console.log("logged in", client.auth);
-		populatePage();
-	}
 }
 
 </script>
