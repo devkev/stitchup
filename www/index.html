@@ -38,11 +38,9 @@ function populatePage() {
 	$("#headerusername").text(username);
 
 	db.collection('standups').find({participant_id: client.auth.user.id}).asArray().then( docs => {
-		console.log("Found docs", docs)
-		var standuplist = $("#standuplist");
-		for (var doc in docs) {
-			standuplist.append($("li").text(doc.id));
-		}
+	    console.log("Found docs", docs);
+            const standuplist = docs.map(doc => `<li>${doc.standup_id}</li>`);
+            $('#standuplist').append(standuplist);
 	}).catch(err => {
 		console.error(err)
 	});
